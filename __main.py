@@ -1,7 +1,20 @@
 # AP Computer Science Principles 1.1.9 Project
 # @authors Nathan Gillespie, Ila Gowda, Chloe Han
+import pip
+
+def install(package):
+    if hasattr(pip, 'main'):
+        pip.main(['install', package])
+    else:
+        pip._internal.main(['install', package])
+
+# Example
+if __name__ == '__main__':
+    install('Translate')
+
 from translate import Translator
 
+# Dictionary mapping language names (both full and abbreviated) to language codes
 language_names_to_codes = {
     'afrikaans': 'af', 'albanian': 'sq', 'amharic': 'am', 'arabic': 'ar', 'armenian': 'hy',
     'azerbaijani': 'az', 'basque': 'eu', 'belarusian': 'be', 'bengali': 'bn', 'bosnian': 'bs',
