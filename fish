@@ -15,7 +15,7 @@ fishList = [
         "x": 60,
         "y": 300,
         "size" : 60,
-        "speed" : 1,
+        "speed" : 2,
         "color": "orange"
     },
     {
@@ -24,6 +24,12 @@ fishList = [
         "size" : 60,
         "speed" : 0.5,
         "color": "pink"
+    },
+    { "x": 60,
+        "y": 500,
+        "size" : 60,
+        "speed" : 0.3,
+        "color": "yellow"
     },
 ]
 
