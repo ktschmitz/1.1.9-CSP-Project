@@ -1,5 +1,6 @@
 import tkinter as tk
 import random
+from PIL import Image, ImageTk
 
 # Initialize Tkinter
 root = tk.Tk()
@@ -15,29 +16,38 @@ fishList = [
         "x": 60,
         "y": 300,
         "size" : 60,
-        "speed" : 2,
+        "speed" : random.randint(0, 100)/100,
         "color": "orange"
     },
     {
         "x": 60,
         "y": 100,
         "size" : 60,
-        "speed" : 0.5,
+        "speed" : random.randint(0, 100)/100,
         "color": "pink"
     },
-    { "x": 60,
+    {
+        "x": 60,
         "y": 500,
         "size" : 60,
-        "speed" : 0.3,
+        "speed" : random.randint(0, 100)/100,
         "color": "yellow"
     },
 ]
 
+
+# Open the image file
+original_image = Image.open("floor.png")
+
+# Resize the image
+resized_image = original_image.resize([800, 400])
+
+# Convert the resized image to a PhotoImage object
+backgroundImage = ImageTk.PhotoImage(resized_image)
+
 # Bubble properties
 bubbles = []
 
-# Plant properties
-plants = [(200, 550), (300, 550), (550, 550)]
 
 # Function to move the fish
 def move_fish(fish):
@@ -58,12 +68,8 @@ def draw_fish(x, y, size, color):
 def draw_aquarium():
     canvas.delete("all")
     
-    # Draw the aquarium background
-    canvas.create_rectangle(0, 0, 800, 600, fill="lightblue")
-    
-    # Draw plants
-    for plant_x, plant_y in plants:
-        canvas.create_rectangle(plant_x, plant_y, plant_x + 20, plant_y + 50, fill="green")
+    # Pic's upper-left corner (NW) on the canvas is at x=50 y=10.
+    canvas.create_image(400, 400, image=backgroundImage)
     
     # Draw the fish
     for fish in fishList:
@@ -79,7 +85,7 @@ def draw_aquarium():
     # Move bubbles upward
     for i in range(len(bubbles)):
         x, y, size = bubbles[i]
-        y -= random.randint(0, 10) / 20  # Adjust the speed of bubbles here
+        y -= random.randint(0, 100) / 200  # Adjust the speed of bubbles here
         bubbles[i] = (x, y, size)
     
     # Draw bubbles
