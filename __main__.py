@@ -1,4 +1,5 @@
 import tkinter as tk
+import turtle
 import random
 from PIL import Image, ImageTk
 
@@ -16,21 +17,21 @@ fishList = [
         "x": 60,
         "y": 300,
         "size" : 60,
-        "speed" : random.randint(0, 100)/100,
+        "speed" : random.randint(25, 75)/100,
         "color": "orange"
     },
     {
         "x": 60,
         "y": 100,
         "size" : 60,
-        "speed" : random.randint(0, 100)/100,
+        "speed" : random.randint(25, 75)/100,
         "color": "pink"
     },
     {
         "x": 60,
         "y": 500,
         "size" : 60,
-        "speed" : random.randint(0, 100)/100,
+        "speed" : random.randint(25, 75)/100,
         "color": "yellow"
     },
 ]
@@ -45,6 +46,9 @@ resized_image = original_image.resize([800, 400])
 # Convert the resized image to a PhotoImage object
 backgroundImage = ImageTk.PhotoImage(resized_image)
 
+sharkImage = ImageTk.PhotoImage(Image.open("dancingShark.gif").resize([125, 200]))
+jellyfishImage = ImageTk.PhotoImage(Image.open("jellyfish.png").resize([60, 100]))
+
 # Bubble properties
 bubbles = []
 
@@ -52,8 +56,8 @@ bubbles = []
 # Function to move the fish
 def move_fish(fish):
     fish["x"] += fish["speed"]
-    if fish["x"] >= 800:  # Reset fish position when it reaches the right edge
-        fish["x"] = fish["size"]
+    if fish["x"] - fish["size"] >= 800:  # Reset fish position when it reaches the right edge
+        fish["x"] = - fish["size"]
 
 # Draw the fish with eyes and a smile
 def draw_fish(x, y, size, color):
@@ -64,13 +68,19 @@ def draw_fish(x, y, size, color):
     canvas.create_oval(x + size / 4 * 3, y + size / 4, x + size / 4 * 3 + 5, y + size / 4 + 5, fill="black")  # Right eye
     canvas.create_arc(x + size / 4, y + size / 2, x + size / 4 * 3, y + size / 4 * 3, start=180, extent=180, style=tk.ARC)  # Smile
 
+
+
 # Function to draw the aquarium
 def draw_aquarium():
     canvas.delete("all")
     
     # Pic's upper-left corner (NW) on the canvas is at x=50 y=10.
     canvas.create_image(400, 400, image=backgroundImage)
-    
+
+    canvas.create_image(400, 400, image=sharkImage)
+    canvas.create_image(200, 400, image=jellyfishImage)
+    canvas.create_image(100, 300, image=jellyfishImage)
+    canvas.create_image(700, 100, image=jellyfishImage)
     # Draw the fish
     for fish in fishList:
         draw_fish(fish["x"], fish["y"], fish["size"], fish["color"])
