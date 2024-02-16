@@ -1,7 +1,7 @@
 import turtle
 
 
-#set up screen
+#set up screen 
 wn = turtle.Screen()
 wn.title("Catching Fruit")
 turtle.bgpic("finalamazon1.png")
