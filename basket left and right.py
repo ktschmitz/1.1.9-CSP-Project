@@ -1,108 +1,95 @@
 import turtle
 import random
-import keyboard
-wn = turtle.Screen()
-turtle.bgpic("finalamazon1.png")
-wn.setup(width=800, height=600)
-last_pressed = 'up'
 
-turtleX = 0
+# Set up the screen
+screen = turtle.Screen()
+screen.bgpic("finalamazon1.png")
+screen.setup(width=800, height=600)
+screen.tracer(0)  # Turn off automatic screen updates
 
-# registering the image
-# as a new shape
+# Register the image as a new shape
 turtle.register_shape('basket4.gif')
-turtle.shape('basket4.gif')
 
-def f1():
-  global turtleX
-  turtleX += 10
+# Create the basket
+basket = turtle.Turtle()
+basket.shape('basket4.gif')
+basket.penup()
+basket.speed(0)
+basket.goto(0, -250)
 
-def f2():
-  global turtleX
-  turtleX -= 10
-
-# Basket on bottom
-def setup(col, x, y, w, s, shape):
-  turtle.penup()
-  turtle.up()
-  turtle.goto(0,-350)
-  turtle.width(w)
-  turtle.turtlesize(s)
-  turtle.color(col)
-  turtle.lt(90)
-  turtle.down()
-  turtle.penup()
-
-  keyboard.add_hotkey('d', fun1())
-  keyboard.add_hotkey('a', fun2())
-  '''
-  wn.onkey(quitTurtles, "Escape")
-  '''
-  wn.listen()
-  wn.mainloop()
-  turtle_scale = .5
-
-#Event handlers
-def right():
-  global last_pressed
-  if last_pressed == 'left':
-    turtle.fd(10)
-  elif last_pressed == 'right':
-    turtle.lt(180)
-    turtle.fd(10)
-  else:
-    turtle.rt(90)
-    turtle.fd(10)
-
-  last_pressed = 'left'
-
-def left():
-  global last_pressed
-  if last_pressed == 'left':
-    turtle.rt(180)
-    turtle.fd(10)
-  elif last_pressed == 'right':
-    turtle.fd(10)
-  else:
-    turtle.lt(90)
-    turtle.fd(10)
-
-  last_pressed = 'right'
-
-
-#add the fruit
+# Create the fruit
 fruit = turtle.Turtle()
-fruit.speed(0)
 fruit.shape("circle")
 fruit.color("red")
 fruit.penup()
-fruit.goto(0,350)
+fruit.speed(0)
+fruit.goto(0, 250)
 
-while True:
-    turtle.goto(turtleX,-350)
-    wn.update()
+# Set the gravity for the fruit
+gravity = 0.2
+fruit_dy = 0
 
-    y =  fruit.ycor()
-    y-=3
+# Define movement functions for the basket
+basket_speed = 20
+basket_dx = 0
+
+def move_right():
+    global basket_dx
+    basket_dx = basket_speed
+
+def move_left():
+    global basket_dx
+    basket_dx = -basket_speed
+
+def stop_movement():
+    global basket_dx
+    basket_dx = 0
+
+# Bind the movement functions to keyboard keys
+screen.listen()
+screen.onkeypress(move_right, 'Right')
+screen.onkeypress(move_left, 'Left')
+screen.onkeyrelease(stop_movement, 'Right')
+screen.onkeyrelease(stop_movement, 'Left')
+
+# Function to move the basket smoothly
+def move_basket_smooth():
+    global basket_dx
+    x = basket.xcor()
+    x += basket_dx
+    if x > 380:
+        x = 380
+    elif x < -380:
+        x = -380
+    basket.setx(x)
+    screen.update()
+    screen.ontimer(move_basket_smooth, 20)
+
+# Function to move the fruit continuously
+def move_fruit():
+    global fruit_dy
+    y = fruit.ycor()
+    y -= fruit_dy
     fruit.sety(y)
-    
-    #check if off the screen
+    fruit_dy += gravity
     if y < -300:
-      x = random.randint(-380, 380)
-      y = random.randint(300,400)
-      fruit.goto(x,y)
+        reset_fruit()
+    if abs(basket.xcor() - fruit.xcor()) < 50 and abs(basket.ycor() - fruit.ycor()) < 20:
+        reset_fruit()
 
-    #check for a collision with the player
-    if turtle.distance(fruit) < 20:
-      x = random.randint(-380, 380)
-      y = random.randint(300,400)
-      fruit.goto(x,y)
+    screen.update()
+    screen.ontimer(move_fruit, 10)
 
-  
+# Function to reset the fruit position
+def reset_fruit():
+    global fruit_dy
+    fruit.goto(random.randint(-380, 380), 250)
+    fruit_dy = 0
 
-'''
-def quitTurtles():
-  wn.bye()
+# Start the game
+screen.update()
+move_basket_smooth()
+move_fruit()
 
-setup("blue",-200,200,2,2,"turtle")
-'''
+# Start the main event loop
+screen.mainloop()
